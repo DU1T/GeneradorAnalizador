@@ -69,7 +69,7 @@ public class Main
                         else
                         {
                             //Instanciamos el generador
-                            GeneradorNumeros generador = new GeneradorNumeros(FILE_PATH, cantidad);
+                            GeneradorNumeros generador = new GeneradorNumeros(rutaFinal, cantidad);
                             //Envolvemos el generador en un hilo y lo iniciamos
                             Thread threadGenerador = new Thread(generador);
                             threadGenerador.start();
