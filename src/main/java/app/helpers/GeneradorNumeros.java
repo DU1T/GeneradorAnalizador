@@ -11,21 +11,18 @@ public class GeneradorNumeros implements Runnable //Runnable para ejecucion en h
     //Atributos
     private final String filePath;
     private final int quantity;
-    private final ReproductorAudio reproductorAudio;
 
     //Constructor
-    public GeneradorNumeros(String filePath, int quantity, ReproductorAudio reproductorAudio) {
+    public GeneradorNumeros(String filePath, int quantity) {
         this.filePath = filePath;
         this.quantity = quantity;
-        this.reproductorAudio = reproductorAudio;
     }
     //Metodo
     @Override
     public void run() {
-        System.out.println("Iniciando generación de " + quantity + " datos...");
-        reproductorAudio.iniciar(); // Iniciar música
+        System.out.println("\n Iniciando generación de " + quantity + " datos...");
 
-        long startTime = System.currentTimeMillis();
+        long tiempoInicio = System.currentTimeMillis();
 
         // Buffer de 64KB para mejor eficiencia
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath), 65536)) {
@@ -41,8 +38,7 @@ public class GeneradorNumeros implements Runnable //Runnable para ejecucion en h
             e.printStackTrace();
         }
 
-        reproductorAudio.detener(); // Detener música
-        long endTime = System.currentTimeMillis();
-        System.out.println("Generación finalizada en: " + (endTime - startTime) + "ms");
+        long tiempoFin = System.currentTimeMillis();
+        System.out.println("Generación finalizada en: " + (tiempoFin - tiempoInicio) + "ms");
     }
 }
