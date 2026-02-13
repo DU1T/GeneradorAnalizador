@@ -12,7 +12,7 @@ public class Main
     //Atributos
     // Rutas relativas a la raíz del proyecto
     private static final String DATA_DIR = "data/";
-    private static final String FILE_PATH = DATA_DIR + "numeros_desordenados.txt";
+    //private static final String FILE_PATH = DATA_DIR + "numeros_desordenados.txt";
     private static final String AUDIO_PATH = "recursos/musica/AudioFondoMC.wav";
     private static final int NUMEROS_MAX = 10000000;
 
@@ -42,6 +42,16 @@ public class Main
             switch (entrada)
             {
                 case "1":
+                    System.out.println("Ingrese el nombre del archivo (ej: mis_numeros): ");
+                    String nombreArchivo = scanner.nextLine().trim();
+
+                    // Validar que no esté vacío
+                    if (nombreArchivo.isEmpty()) {
+                        nombreArchivo = "numeros_desordenados"; // Nombre por defecto
+                    }
+                    // Construir la ruta completa
+                    String rutaFinal = DATA_DIR + nombreArchivo + ".txt";
+
                     System.out.print("Ingrese la cantidad de numeros a generar (Ej: 10000000): ");
                     try
                     {
