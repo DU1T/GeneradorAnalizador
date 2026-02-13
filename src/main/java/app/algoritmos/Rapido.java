@@ -1,4 +1,6 @@
 package app.algoritmos;
 
-public class Rapido {
+public class Rapido
+{
+
 }

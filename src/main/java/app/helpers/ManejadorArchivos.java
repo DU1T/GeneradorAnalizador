@@ -1,4 +1,9 @@
 package app.helpers;
 
-public class ManejadorArchivos {
+//Librerias
+
+
+public class ManejadorArchivos
+{
+
 }

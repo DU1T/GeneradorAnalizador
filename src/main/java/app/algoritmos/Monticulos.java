@@ -1,4 +1,6 @@
 package app.algoritmos;
 
-public class Monticulos {
+public class Monticulos
+{
+
 }
