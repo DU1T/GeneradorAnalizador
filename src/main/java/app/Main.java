@@ -14,6 +14,9 @@ public class Main
     private static final String AUDIO_PATH = "recursos/musica/AudioFondoMC.wav";
     private static final int NUMEROS_MAX = 10000000;
 
+    private static ReproductorAudio audioPlayer;
+    private static boolean ocupado = false;
+
     //Metodo Prinicipal
     public static void main(String[] args)
     {
@@ -22,7 +25,7 @@ public class Main
 
         //Preparar directorios y audio
         ManejadorArchivos.checkyCreacionDirectorio(DATA_DIR);
-        ReproductorAudio audioPlayer = new ReproductorAudio(AUDIO_PATH);
+        audioPlayer = new ReproductorAudio(AUDIO_PATH);
 
         System.out.println("-----------------------------------------");
         System.out.println("   BIENVENIDO AL ANALIZADOR UMG ");
@@ -78,10 +81,24 @@ public class Main
     }
     private static void menuIndividual(Scanner sc)
     {
+        if (ocupado) {
+            System.out.println("[SISTEMA] Hay un proceso en curso. Por favor, espere.");
+            return;
+        }
+
         System.out.println("-----------------------------------------");
-        System.out.print("Ruta del archivo (ej: numeros.): ");
+        System.out.print("Nombre del archivo (sin .txt, se busca en /data): ");
         String nombre = sc.nextLine().trim();
+
         String ruta = DATA_DIR + nombre + (nombre.endsWith(".txt") ? "" : ".txt");
+
+        // Verificación manual antes de intentar leer
+        java.io.File archivo = new java.io.File(ruta);
+        if (!archivo.exists()) {
+            System.out.println("ERROR: El archivo '" + ruta + "' aun no existe.");
+            System.out.println("Si acabas de generarlo, espera a que aparezca el mensaje de 'Finalizado'.");
+            return;
+        }
 
         int[] datos = ManejadorArchivos.leerArchivo(ruta);
 
@@ -94,39 +111,64 @@ public class Main
 
             AlgoritmoOrdenamiento alg = seleccionarAlgoritmo(sc.nextLine());
             if (alg != null) {
-                ManjeadorAlgoritmos.ejecutarAlgoritmo(alg, datos, ruta);
+                // Lanzamos el proceso en un hilo nuevo
+                Thread hiloIndividual = new Thread(() -> {
+                    ocupado = true;
+                    audioPlayer.iniciar();
+                    System.out.println("\nEjecutando " + alg.getNombre() + "...");
+                    ManjeadorAlgoritmos.ejecutarAlgoritmo(alg, datos, ruta);
+                    audioPlayer.detener();
+                    ocupado = false;
+                    System.out.println("\nOrdenamiento finalizado. (Menú liberado)");
+                });
+                hiloIndividual.start();
+                System.out.println("Algoritmo ejecutándose en segundo plano.");
             }
         }
     }
     private static void menuAutomatico(Scanner sc)
     {
+        if (ocupado) {
+            System.out.println("[SISTEMA] El Test Automatico ya esta corriendo o hay otro proceso activo.");
+            return;
+        }
         System.out.println("-----------------------------------------");
-        System.out.print("Ruta del archivo para el Test Completo: ");
-        String ruta = sc.nextLine().trim();
+        System.out.print("Nombre del archivo para Test (se busca en /data): ");
+        String nombre = sc.nextLine().trim();
+        String ruta = DATA_DIR + nombre + (nombre.endsWith(".txt") ? "" : ".txt");
         int[] datosOriginales = ManejadorArchivos.leerArchivo(ruta);
 
-        if (datosOriginales != null) {
-            System.out.println("-----------------------------------------");
-            System.out.println("ALERTA: Iniciando prueba completa de 8 algoritmos.");
-            System.out.println("El tiempo total para 10M de datos puede ser de varias HORAS o DIAS.");
+        if (datosOriginales != null)
+        {
+            Thread hiloTest = new Thread(() -> {
+                ocupado = true;
+                System.out.println("-----------------------------------------");
+                System.out.println("ALERTA: Iniciando prueba completa de 8 algoritmos.");
+                System.out.println("El tiempo total para 10M de datos puede ser de varias HORAS o DIAS.");
 
-            // Lista ordenada de más eficientes a menos eficientes
-            AlgoritmoOrdenamiento[] listaInvestigacion = {
-                    new Conteo(),
-                    new Rapido(),
-                    new Mezcla(),
-                    new Monticulos(),
-                    new Shell(),
-                    new Insercion(),
-                    new Burbuja(),
-                    new Seleccion()
-            };
+                // Lista ordenada de más eficientes a menos eficientes
+                AlgoritmoOrdenamiento[] listaInvestigacion = {
+                        new Conteo(),
+                        new Rapido(),
+                        new Mezcla(),
+                        new Monticulos(),
+                        new Shell(),
+                        new Insercion(),
+                        new Burbuja(),
+                        new Seleccion()
+                };
 
-            for (AlgoritmoOrdenamiento alg : listaInvestigacion) {
-                // El manager clonara el array original en cada iteracion
-                ManjeadorAlgoritmos.ejecutarAlgoritmo(alg, datosOriginales, ruta);
-            }
-            System.out.println("[TEST] Pruebas finalizadas.");
+                audioPlayer.iniciar();
+                for (AlgoritmoOrdenamiento alg : listaInvestigacion) {
+                    // El manager clonara el array original en cada iteracion
+                    ManjeadorAlgoritmos.ejecutarAlgoritmo(alg, datosOriginales, ruta);
+                }
+                audioPlayer.detener();
+                System.out.println("[TEST] Pruebas finalizadas.");
+                ocupado = false;
+            });
+            hiloTest.start();
+            System.out.println("Pruebas iniciada en segundo plano.");
         }
     }
     private static AlgoritmoOrdenamiento seleccionarAlgoritmo(String opc) {
