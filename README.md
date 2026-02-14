@@ -45,5 +45,5 @@ terminal en esta carpeta y ejecute:
   Repo: https://github.com/DU1T/GeneradorAnalizador.git
 
 -----------------------------------------------------------------------
-Investigación de Algoritmos - ING. Sistemas 5B - LT,BM,EL
+Estructuras de datos - ING. Sistemas 5B - LT,BM,EL
 =======================================================================
