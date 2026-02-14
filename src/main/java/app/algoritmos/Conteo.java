@@ -20,11 +20,11 @@ public class Conteo implements AlgoritmoOrdenamiento
 
         //Calcular rango y validar
         long range = (long) max - min + 1;
-        if (range > 15000000) { // Límite de seguridad para evitar OutOfMemory
+        /*if (range > 15000000) { // Límite de seguridad para evitar OutOfMemory
             System.out.println("Rango demasiado grande para Counting Sort. Usando QuickSort como respaldo...");
             new Rapido().Ordenar(arr);
             return;
-        }
+        }*/
 
         //Crear el arreglo de frecuencias
         int[] count = new int[(int) range];
