@@ -1,4 +1,7 @@
 package app.algoritmos;
-
-public class AlgoritmoOrdenamiento {
+//Interfaz para manejar algoritmos
+public interface AlgoritmoOrdenamiento
+{
+        void Ordenar(int[] datos);
+        String getNombre(); // algoritmo en ejecucion
 }
