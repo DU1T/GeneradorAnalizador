@@ -42,6 +42,7 @@ terminal en esta carpeta y ejecute:
 • ALGORITMOS PESADOS: Algoritmos como Burbuja o Selección pueden 
   tardar minutos u horas con 10M de datos. No cierre la ventana 
   mientras la música esté sonando.
+  Repo: https://github.com/DU1T/GeneradorAnalizador.git
 
 -----------------------------------------------------------------------
 Investigación de Algoritmos - ING. Sistemas 5B - LT,BM,EL
