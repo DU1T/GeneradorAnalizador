@@ -8,11 +8,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.ArrayList;
 
 public class ManejadorArchivos
 {
     //Atributos
-    private static final int BUFFER_SIZE = 64 * 1024; //Buffer de 64KB
+    private static final int BUFFER_SIZE = 1024 * 1024; //Buffer de 10MB
 
     //Metodos
     //Verificar directorios
@@ -43,28 +44,27 @@ public class ManejadorArchivos
             System.err.println("El archivo esta vacio.");
             return null;
         }
+        //Usamos una lista dinamica, con capacidad inicial de 10Mill.
+        ArrayList<Integer> listaTemporal = new ArrayList<>(10000000);
         //Lectura de datos
         try (BufferedReader br = new BufferedReader(new FileReader(archivo), BUFFER_SIZE))
         {
-            // Leemos la el bloque de datos
-            String linea = br.readLine();
-            if (linea == null || linea.isEmpty())
+            String linea;
+            System.out.println("Cargando datos en memoria...");
+            while ((linea = br.readLine()) != null)
             {
-                return null;
+                StringTokenizer st = new StringTokenizer(linea, ", \t");
+                while (st.hasMoreTokens()) {
+                    listaTemporal.add(Integer.parseInt(st.nextToken().trim()));
+                }
             }
-
-            //Usamos StringTokenizer (corte de texto)
-            StringTokenizer st = new StringTokenizer(linea, ",");
-            int totalTokens = st.countTokens();
-            int[] datos = new int[totalTokens];
-
-            int i = 0;
-            while (st.hasMoreTokens()) {
-                // Integer.parseInt es rapido, pero requiere que el token no tenga espacios
-                datos[i++] = Integer.parseInt(st.nextToken().trim());
+            // Conversion eficiente a int[]
+            int[] datos = new int[listaTemporal.size()];
+            for (int i = 0; i < listaTemporal.size(); i++)
+            {
+                datos[i] = listaTemporal.get(i);
             }
-
-            System.out.println("Lectura completada: " + totalTokens + " numeros cargados.");
+            System.out.println("Carga exitosa: " + datos.length + " numeros en memoria.");
             return datos;
 
         } catch (IOException | NumberFormatException e) {
