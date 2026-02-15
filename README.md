@@ -5,8 +5,6 @@
 Este proyecto permite generar y analizar el rendimiento de 8 
 algoritmos de ordenamiento con volúmenes de hasta 10,000,000 
 de datos, incluyendo música de fondo durante el proceso.
-Para realizar pruebas con 10M cargar numerosByLocalRandom.txt a la
-carpeta data de GeneradoryAnalizadorUMG_BuildFINAL.
 -----------------------------------------------------------------------
 1. INSTRUCCIONES DE EJECUCIÓN (Windows)
 -----------------------------------------------------------------------
